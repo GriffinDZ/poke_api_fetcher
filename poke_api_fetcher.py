@@ -103,7 +103,7 @@ def get_pokemon_details(pokemon_url):
         try:
             # Cache exists, load it
             with open(cache_file, 'r') as f:
-                return json.load(f)
+                return json.load(f), True  # Return data and cache_hit=True
         except Exception as e:
             print(f"Error reading cache for {pokemon_name}: {e}")
     
@@ -121,10 +121,10 @@ def get_pokemon_details(pokemon_url):
         except Exception as e:
             print(f"Error saving cache for {pokemon_name}: {e}")
         
-        return pokemon_data
+        return pokemon_data, False  # Return data and cache_hit=False
     else:
         print(f"Failed to fetch Pokemon details: {response.status_code}")
-        return None
+        return None, False
 
 def get_stat(pokemon_data, stat_name):
     """Extract a specific stat from Pokemon data"""
@@ -176,7 +176,8 @@ def get_pokemon_details_with_retry(pokemon_url, max_retries=3, force_refresh=Fal
                     cache_file.unlink()
                     print(f"Removed cache for {pokemon_name} to force refresh")
             
-            return get_pokemon_details(pokemon_url)
+            data, from_cache = get_pokemon_details(pokemon_url)
+            return data, from_cache
         except Exception as e:
             retries += 1
             print(f"Error fetching Pokemon details (attempt {retries}/{max_retries}): {e}")
@@ -187,7 +188,7 @@ def get_pokemon_details_with_retry(pokemon_url, max_retries=3, force_refresh=Fal
                 time.sleep(wait_time)
     
     print(f"Failed to fetch Pokemon details after {max_retries} attempts")
-    return None
+    return None, False
 
 def parse_arguments():
     """Parse command line arguments"""
@@ -326,7 +327,7 @@ def main():
                 
                 try:
                     # Get Pokemon details
-                    pokemon_data = get_pokemon_details_with_retry(pokemon["url"], force_refresh=force_refresh)
+                    pokemon_data, from_cache = get_pokemon_details_with_retry(pokemon["url"], force_refresh=force_refresh)
                     if not pokemon_data:
                         skipped += 1
                         continue
@@ -356,8 +357,9 @@ def main():
                     skipped += 1
                     continue
                 
-                # Be nice to the API - add a small delay between requests
-                time.sleep(0.1)
+                # Be nice to the API - add a small delay between requests, but only if we actually used the API
+                if not from_cache:
+                    time.sleep(0.1)
             
             total_time = time.time() - start_time
             print(f"\nDone! Processed {processed} Pokemon, skipped {skipped}.")
