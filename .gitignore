@@ -5,6 +5,7 @@
 !.gitignore
 !poke_api_fetcher.py
 !requirements.txt
+!README.md
 
 # Ignore all directories
 */
