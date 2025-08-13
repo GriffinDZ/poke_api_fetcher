@@ -30,7 +30,7 @@ Basic usage:
 python poke_api_fetcher.py
 ```
 
-This will fetch the name, speed stat, and front_default sprite for all Pokémon, download the sprite images, and save the data to a CSV file.
+This will fetch all available fields for all Pokémon, save sprite URLs (without downloading images), and save the data to a CSV file.
 
 ### Command-line Options
 
@@ -41,9 +41,9 @@ This will fetch the name, speed stat, and front_default sprite for all Pokémon,
 | `--output FILENAME` | Specify a custom output CSV filename (default: pokemon_data.csv) |
 | `--fields FIELDS` | Comma-separated list of fields to fetch (see available fields below) |
 | `--all-stats` | Include all stats (hp, attack, defense, special-attack, special-defense, speed) |
-| `--all-fields` | Include all available fields |
-| `--download-images` | Download sprite images (default behavior) |
-| `--no-download-images` | Do not download sprite images, just save URLs |
+| `--all-fields` | Include all available fields (default) |
+| `--download-images` | Download sprite images |
+| `--no-download-images` | Do not download sprite images, just save URLs (default) |
 
 ### Available Fields
 

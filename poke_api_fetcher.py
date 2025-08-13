@@ -201,19 +201,19 @@ def parse_arguments():
     
     # Field selection options
     field_group = parser.add_mutually_exclusive_group()
-    field_group.add_argument('--fields', type=str, default="name,speed,sprite",
+    field_group.add_argument('--fields', type=str,
                         help='Comma-separated list of fields to fetch. Available fields: name, id, height, weight, '
                              'speed, attack, defense, hp, special-attack, special-defense, sprite, types')
     field_group.add_argument('--all-stats', action='store_true',
                         help='Include all stats (hp, attack, defense, special-attack, special-defense, speed)')
-    field_group.add_argument('--all-fields', action='store_true',
-                        help='Include all available fields')
+    field_group.add_argument('--all-fields', action='store_true', default=True,
+                        help='Include all available fields (default)')
     
     # Image handling options
-    parser.add_argument('--download-images', action='store_true', default=True,
-                        help='Download sprite images (default: True)')
-    parser.add_argument('--no-download-images', action='store_false', dest='download_images',
-                        help='Do not download sprite images, just save URLs')
+    parser.add_argument('--download-images', action='store_true', dest='download_images',
+                        help='Download sprite images')
+    parser.add_argument('--no-download-images', action='store_false', dest='download_images', default=False,
+                        help='Do not download sprite images, just save URLs (default)')
     return parser.parse_args()
 
 def get_field_value(pokemon_data, field, pokemon_name, download_images=True):
@@ -269,7 +269,7 @@ def main():
     all_stats_fields = ["hp", "attack", "defense", "special-attack", "special-defense", "speed"]
     
     # Parse fields to fetch based on command-line options
-    if args.all_fields:
+    if args.all_fields or not args.fields:
         fields = all_available_fields
     elif args.all_stats:
         fields = ["name", "id"] + all_stats_fields + ["sprite"]
