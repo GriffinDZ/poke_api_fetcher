@@ -106,11 +106,3 @@ The script uses a caching system to minimize API calls:
 - Sprite images are cached in the `sprites/` directory
 
 By default, the script will use cached data if available. Use the `--force-refresh` option to ignore the cache and fetch fresh data.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Acknowledgments
-
-- Data provided by [PokeAPI](https://pokeapi.co/)
