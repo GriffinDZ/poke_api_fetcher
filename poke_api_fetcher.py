@@ -98,17 +98,12 @@ def get_pokemon_details(pokemon_url):
     pokemon_name = pokemon_url.rstrip('/').split('/')[-1]
     cache_file = pokemon_details_dir / f"{pokemon_name}.json"
     
-    # Check if we have a valid cache for this Pokemon
+    # Check if we have a cache for this Pokemon
     if cache_file.exists():
         try:
-            # Check if the cache is still valid
-            mod_time = datetime.fromtimestamp(cache_file.stat().st_mtime)
-            now = datetime.now()
-            
-            if now - mod_time < timedelta(days=CACHE_VALIDITY_DAYS):
-                # Cache is valid, load it
-                with open(cache_file, 'r') as f:
-                    return json.load(f)
+            # Cache exists, load it
+            with open(cache_file, 'r') as f:
+                return json.load(f)
         except Exception as e:
             print(f"Error reading cache for {pokemon_name}: {e}")
     
